@@ -2,8 +2,13 @@ using System;
 
 namespace QueryHelpers;
 
-public static class OdataToSqlConverter
+public class OdataToSqlConverter
 {
+    enum eQueryParams
+    {
+        filter,select,orderby,count,top,skip
+    }
+
     public static string Convert(string odataQuery)
     {
         return odataQuery;
@@ -29,7 +34,7 @@ public static class OdataToSqlConverter
         return operatorName;
     }
 
-    static string ConvertFunction(string val)
+    static Dictionary<string, string> ParseQueryParams(string val)
     {
         // contains, startswith, endswith, etc.
         return val;
