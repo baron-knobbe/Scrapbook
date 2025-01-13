@@ -4,10 +4,12 @@ namespace QueryHelpers;
 
 public class OdataToSqlConverter
 {
-    enum eQueryParams
+    public OdataToSqlConverter()
     {
-        filter,select,orderby,count,top,skip
+        QueryParams = new QueryParameter();
     }
+
+    QueryParameter QueryParams { get; set; }
 
     public static string Convert(string odataQuery)
     {
@@ -34,9 +36,49 @@ public class OdataToSqlConverter
         return operatorName;
     }
 
-    static Dictionary<string, string> ParseQueryParams(string val)
+    void LoadQueryParams(string val)
     {
-        // contains, startswith, endswith, etc.
-        return val;
+        var qryvals = val.Split('?')[1];
+        var queryParams = qryvals.Split('&');
+
+        foreach (var queryParam in queryParams)
+        {
+            var key = queryParam.Split('=')[0].ToLower().Substring(1);
+            var value = queryParam.Split('=')[1];
+
+            switch (key)
+            {
+                case "filter":
+                    QueryParams.Filter = value;
+                    break;
+                case "select":
+                    QueryParams.Select = value;
+                    break;
+                case "orderby":
+                    QueryParams.OrderBy = value;
+                    break;
+                case "count":
+                    QueryParams.Count = value;
+                    break;
+                case "top":
+                    QueryParams.Top = value;
+                    break;
+                case "skip":
+                    QueryParams.Skip = value;
+                    break;
+                default:
+                    break;
+            }
+        }    
     }
+}
+
+class QueryParameter
+{
+    public string Filter { get; set; }
+    public string Select { get; set; }
+    public string OrderBy { get; set; }
+    public string Count { get; set; }
+    public string Top { get; set; }
+    public string Skip { get; set; }
 }
